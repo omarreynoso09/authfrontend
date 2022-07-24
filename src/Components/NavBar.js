@@ -1,13 +1,17 @@
-import { useState, useEffect } from "react";
-import { Link, Outlet } from "react-router-dom";
-import { getUserToken, logoutUser } from "../Auth";
+import React from "react";
+import { Outlet, Link, useNavigate } from "react-router-dom";
+import { getUserToken } from "../Auth";
+import { logoutUser } from "../Auth";
+import { useState } from "react";
+import { useEffect } from "react";
 
 const NavBar = ({ isAuthLoading, setIsAuthLoading }) => {
   const [userToken, setUserToken] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const token = getUserToken();
-    setUserToken(token);
+    const localUserToken = getUserToken();
+    setUserToken(localUserToken);
   }, [isAuthLoading]);
 
   return (
@@ -25,26 +29,28 @@ const NavBar = ({ isAuthLoading, setIsAuthLoading }) => {
               </li>
               <li>
                 <Link to="/registration">Registration</Link>
-              </li>{" "}
-            </>
-          )}
-          {userToken && (
-            <>
-              <span>
-                <strong>You Just Logged In</strong>
-              </span>
-              <button
-                onClick={async () => {
-                  setIsAuthLoading(true);
-                  const logoutSuccess = await logoutUser();
-                  if (logoutSuccess) setIsAuthLoading(false);
-                }}
-              >
-                Logout
-              </button>
+              </li>
             </>
           )}
         </ul>
+        {userToken && (
+          <>
+            <span>
+              <strong>You Are Logged In</strong>
+            </span>
+            <button
+              onClick={async () => {
+                setIsAuthLoading(true);
+                const logoutSuccess = await logoutUser();
+                if (logoutSuccess) {
+                  setIsAuthLoading(false);
+                }
+              }}
+            >
+              Logout
+            </button>
+          </>
+        )}
       </nav>
       <Outlet />
     </div>

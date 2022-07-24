@@ -1,37 +1,59 @@
+import React from "react";
+import { registerUser } from "../Auth";
+import { loginUser } from "../Auth";
+import { useNavigate } from "react-router";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { registerUser, loginUser } from "../Auth";
 
 const RegistrationPage = ({ isAuthLoading, setIsAuthLoading }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-
   const navigate = useNavigate();
 
   return (
     <div>
+      {/* text input */}
+      <label>Username:</label>
       <input
-        placeholder="Usename"
-        onChange={(e) => setUsername(e.target.value)}
-      />
+        type="text"
+        value={username}
+        onChange={(event) => {
+          const newUsername = event.target.value;
+          setUsername(newUsername);
+        }}
+      ></input>
+      <br></br>
+      <br></br>
+
+      {/* text input */}
+      <label>Password:</label>
       <input
-        placeholder="Passwrod"
-        onChange={(e) => setPassword(e.target.value)}
-      />
+        type="password"
+        value={password}
+        onChange={(event) => {
+          const newPassword = event.target.value;
+          setPassword(newPassword);
+        }}
+      ></input>
+      <br></br>
+      <br></br>
+
       <button
+        id="signup"
+        type="submit"
         onClick={async () => {
           setIsAuthLoading(true);
-          const registerSuccess = await registerUser(username, password);
-          const loginSuccess = (await registerSuccess)
-            ? await loginUser(username, password)
-            : false;
-          if (loginSuccess) {
-            setIsAuthLoading(false);
-            navigate("/");
+          const isUserRegistered = await registerUser(username, password);
+
+          if (isUserRegistered) {
+            const isUserLoggedIn = await loginUser(username, password);
+            if (isUserLoggedIn) {
+              setIsAuthLoading(false);
+              navigate("/");
+            }
           }
         }}
       >
-        Sign Up
+        Register
       </button>
     </div>
   );
