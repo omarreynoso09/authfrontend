@@ -1,5 +1,4 @@
-// import React from 'react'
-
+// import React from "react";
 const urlEndpoint = process.env.REACT_APP_URL_ENDPOINT;
 
 export const registerUser = async (username, password) => {
@@ -21,7 +20,7 @@ export const loginUser = async (username, password) => {
   const response = await fetch(`${urlEndpoint}/auth/login-user`, {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
+      "content-Type": "application/json",
     },
     body: JSON.stringify({
       username,
@@ -36,11 +35,11 @@ export const loginUser = async (username, password) => {
     );
   }
   return responseJSON.success;
-  //redirect to login page
 };
 
 export const logoutUser = () => {
   localStorage.removeItem(process.env.REACT_APP_TOKEN_HEADER_KEY);
+  return true;
 };
 
 export const getUserToken = () => {
